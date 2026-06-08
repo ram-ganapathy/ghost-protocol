@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 340" width="280" height="340">
+  <defs>
+    <radialGradient id="bgGrad" cx="50%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#3d2f1e"/>
+      <stop offset="100%" stop-color="#1a1310"/>
+    </radialGradient>
+    <radialGradient id="skinGrad" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#c8956a"/>
+      <stop offset="100%" stop-color="#8b5e3c"/>
+    </radialGradient>
+    <radialGradient id="faceGrad" cx="50%" cy="45%" r="50%">
+      <stop offset="0%" stop-color="#d4a077"/>
+      <stop offset="80%" stop-color="#b07848"/>
+      <stop offset="100%" stop-color="#7a4e28"/>
+    </radialGradient>
+    <filter id="painterly" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="softBlur">
+      <feGaussianBlur stdDeviation="0.4"/>
+    </filter>
+    <linearGradient id="jacketGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2c2218"/>
+      <stop offset="50%" stop-color="#1e1810"/>
+      <stop offset="100%" stop-color="#3a2c1a"/>
+    </linearGradient>
+    <linearGradient id="shirtGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#e8e0d0"/>
+      <stop offset="50%" stop-color="#f0e8d8"/>
+      <stop offset="100%" stop-color="#d8d0c0"/>
+    </linearGradient>
+    <radialGradient id="candleLight" cx="50%" cy="0%" r="90%">
+      <stop offset="0%" stop-color="#ef9f2720" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="transparent" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background: dark warm wall -->
+  <rect width="280" height="340" fill="url(#bgGrad)"/>
+
+  <!-- Candle-warm light from above -->
+  <ellipse cx="140" cy="-20" rx="180" ry="120" fill="#ef9f2710"/>
+
+  <!-- Body / jacket — broad shoulders, well-dressed -->
+  <path d="M20 340 L45 220 Q60 200 80 195 L140 185 L200 195 Q220 200 235 220 L260 340 Z"
+        fill="url(#jacketGrad)" filter="url(#painterly)"/>
+
+  <!-- Shirt / collar visible -->
+  <path d="M115 195 L125 220 L140 228 L155 220 L165 195 L140 185 Z"
+        fill="url(#shirtGrad)" opacity="0.9"/>
+
+  <!-- Tie — dark with subtle sheen -->
+  <path d="M136 200 L133 230 L140 238 L147 230 L144 200 Z"
+        fill="#1a1410" opacity="0.8"/>
+  <line x1="140" y1="200" x2="140" y2="235" stroke="#2c2010" stroke-width="0.5" opacity="0.5"/>
+
+  <!-- Neck -->
+  <ellipse cx="140" cy="192" rx="16" ry="10"
+           fill="url(#faceGrad)" filter="url(#softBlur)"/>
+
+  <!-- Head — strong jaw, medium build -->
+  <ellipse cx="140" cy="128" rx="52" ry="60"
+           fill="url(#faceGrad)" filter="url(#painterly)"/>
+
+  <!-- Subtle jaw definition -->
+  <path d="M100 148 Q106 175 140 182 Q174 175 180 148"
+        fill="url(#faceGrad)" opacity="0.6"/>
+
+  <!-- Hair — dark, slightly dishevelled, professional -->
+  <path d="M88 108 Q92 68 140 62 Q188 68 192 108 Q178 88 162 84 Q148 80 140 80 Q132 80 118 84 Q102 88 88 108 Z"
+        fill="#1c1208" opacity="0.95"/>
+  <!-- Side hair shadow -->
+  <path d="M88 108 Q85 120 89 135 Q88 118 94 110 Z" fill="#1c1208" opacity="0.7"/>
+  <path d="M192 108 Q195 120 191 135 Q192 118 186 110 Z" fill="#1c1208" opacity="0.7"/>
+
+  <!-- Eyebrows — dark, set, slightly furrowed (professional intensity) -->
+  <path d="M110 108 Q120 103 132 106" stroke="#2a1a08" stroke-width="3" fill="none"
+        stroke-linecap="round" opacity="0.85"/>
+  <path d="M148 106 Q160 103 170 108" stroke="#2a1a08" stroke-width="3" fill="none"
+        stroke-linecap="round" opacity="0.85"/>
+
+  <!-- Eyes — calm, observing, slightly hooded -->
+  <!-- Left eye -->
+  <ellipse cx="121" cy="120" rx="10" ry="7" fill="#f0e8d8" opacity="0.9"/>
+  <ellipse cx="121" cy="120" rx="6.5" ry="6.5" fill="#3d2810"/>
+  <ellipse cx="121" cy="120" rx="4" ry="4" fill="#1a0e04"/>
+  <circle cx="118.5" cy="118" r="1.2" fill="white" opacity="0.7"/>
+  <!-- Left eyelid -->
+  <path d="M111 118 Q121 113 131 118" stroke="#8b5e3c" stroke-width="1.2" fill="none" opacity="0.6"/>
+
+  <!-- Right eye -->
+  <ellipse cx="159" cy="120" rx="10" ry="7" fill="#f0e8d8" opacity="0.9"/>
+  <ellipse cx="159" cy="120" rx="6.5" ry="6.5" fill="#3d2810"/>
+  <ellipse cx="159" cy="120" rx="4" ry="4" fill="#1a0e04"/>
+  <circle cx="156.5" cy="118" r="1.2" fill="white" opacity="0.7"/>
+  <!-- Right eyelid -->
+  <path d="M149 118 Q159 113 169 118" stroke="#8b5e3c" stroke-width="1.2" fill="none" opacity="0.6"/>
+
+  <!-- Nose — straight, defined -->
+  <path d="M140 124 L136 148 Q133 154 131 155 Q135 157 140 156 Q145 157 149 155 Q147 154 144 148 Z"
+        fill="#9a6b40" opacity="0.55" filter="url(#softBlur)"/>
+  <path d="M136 148 Q133 155 131 156" stroke="#7a4a25" stroke-width="1.2" fill="none" opacity="0.5"/>
+  <path d="M144 148 Q147 155 149 156" stroke="#7a4a25" stroke-width="1.2" fill="none" opacity="0.5"/>
+
+  <!-- Mouth — neutral, composed, slight downward set — not performing -->
+  <path d="M125 165 Q132 162 140 163 Q148 162 155 165"
+        stroke="#7a3e20" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.75"/>
+  <path d="M128 169 Q134 172 140 171 Q146 172 152 169"
+        stroke="#5c2e14" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.4"/>
+
+  <!-- Ears -->
+  <ellipse cx="89" cy="132" rx="7" ry="10" fill="url(#faceGrad)" opacity="0.8"/>
+  <ellipse cx="191" cy="132" rx="7" ry="10" fill="url(#faceGrad)" opacity="0.8"/>
+
+  <!-- Subtle cheekbone shadow — adds dimension -->
+  <ellipse cx="113" cy="140" rx="14" ry="9" fill="#7a4010" opacity="0.18" filter="url(#softBlur)"/>
+  <ellipse cx="167" cy="140" rx="14" ry="9" fill="#7a4010" opacity="0.18" filter="url(#softBlur)"/>
+
+  <!-- Age line at forehead — experience, not old -->
+  <path d="M115 100 Q140 97 165 100" stroke="#8b5020" stroke-width="0.7" fill="none" opacity="0.25"/>
+
+  <!-- Overall warmth glaze — candle quality -->
+  <rect width="280" height="340" fill="url(#candleLight)" opacity="0.7"/>
+
+  <!-- Bottom vignette -->
+  <rect x="0" y="240" width="280" height="100"
+        fill="url(#bgGrad)" opacity="0.55"/>
+</svg>

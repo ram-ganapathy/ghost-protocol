@@ -1,0 +1,11 @@
+.env
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+dist/
+node_modules/
+# OAuth credentials for Google Calendar (T3) — never commit these
+backend/credentials.json
+backend/token.json

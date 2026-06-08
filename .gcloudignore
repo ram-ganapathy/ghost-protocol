@@ -1,0 +1,28 @@
+.git
+.gitignore
+.gcloudignore
+
+# Python artifacts
+__pycache__
+*.pyc
+*.pyo
+.venv
+venv
+
+# Secrets — never upload
+.env
+backend/.env
+backend/credentials.json
+backend/token.json
+
+# Frontend build artifacts (re-built inside Docker; source is needed for COPY in Dockerfile)
+frontend/node_modules/
+frontend/dist/
+
+# Dev/docs artifacts
+spec/
+*.md
+check_google_agent_calls.py
+skills-lock.json
+.agents/
+.github/

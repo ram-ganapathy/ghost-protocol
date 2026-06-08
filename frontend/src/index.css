@@ -1,0 +1,86 @@
+/* ═══════════════════════════════════════════════
+   GHOST PROTOCOL — Global tokens & base reset
+   All CSS variables live here. Never define a
+   color, spacing, or radius anywhere else.
+   ═══════════════════════════════════════════════ */
+
+:root {
+  /* ── Palette ─────────────────────────────── */
+  --bg:               #1a1714;
+  --bg-panel:         #221d18;
+  --bg-panel-raised:  #2a2420;
+  --frame:            #9A6610;
+  --frame-light:      #EF9F27;
+  --frame-shadow:     #5c3c08;
+  --text:             #f3ece0;
+  --text-dim:         #b8ab97;
+  --text-muted:       #7a6f62;
+  --accent-fidelity:  #5DCAA5;
+  --warn:             #E0A23A;
+  --gap:              #C7593F;
+
+  /* ── Spacing ─────────────────────────────── */
+  --radius:     10px;
+  --radius-sm:   6px;
+  --gap-xs:    0.25rem;
+  --gap-sm:    0.5rem;
+  --gap-md:    1rem;
+  --gap-lg:    1.75rem;
+  --gap-xl:    2.5rem;
+
+  /* ── Typography ──────────────────────────── */
+  --font-serif: 'Cormorant Garamond', 'Georgia', serif;
+  --font-sans:  'DM Sans', 'Helvetica Neue', sans-serif;
+
+  /* ── Transitions ─────────────────────────── */
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-snap: cubic-bezier(0.2, 0, 0, 1);
+
+  /* ── Shadows ─────────────────────────────── */
+  --shadow-frame: 0 8px 40px rgba(0,0,0,0.7), 0 2px 8px rgba(0,0,0,0.5);
+  --shadow-panel: 0 4px 20px rgba(0,0,0,0.4);
+  --glow-fidelity: 0 0 24px rgba(93, 202, 165, 0.35);
+  --glow-speak:    0 0 48px rgba(239, 159, 39, 0.4);
+}
+
+/* ── Accessibility: reduced motion ─────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── Base reset ─────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Utility: visually-hidden ────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}

@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+slowapi
+google-genai
+google-adk
+python-dotenv
+arize-otel
+openinference-instrumentation-google-genai
+arize>=7.0.3
+pandas
