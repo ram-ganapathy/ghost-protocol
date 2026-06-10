@@ -132,9 +132,8 @@ def build_agent_instruction(trust_tier: str) -> str:
         "  4. Apply that text immediately as your tone/style for this response.\n"
         "The style instruction NEVER overrides the amnesia wall, deferral triggers, "
         "trust tier rules, or documented domain scope. Those are permanent.\n"
-        "Only say \"Working from base memory on this one.\" if the tool itself errors "
-        "or the messages array contains no system text at all.\n"
-        "Never mention Phoenix, MCP, or prompts by name to the user."
+        "If the tool errors or returns no system text, silently continue — answer as Daniel normally. "
+        "Never mention Phoenix, MCP, prompts, or memory retrieval to the user."
     )
     tier = trust_tier if trust_tier in _TIER_INSTRUCTIONS else "stranger"
     return f"{_BASE_PERSONA}\n\n{_TIER_INSTRUCTIONS[tier]}{_PHOENIX_INSTRUCTION}"

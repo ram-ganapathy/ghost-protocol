@@ -61,8 +61,10 @@ def _build_phoenix_mcp() -> McpToolset | None:
     still work if they happen to share the key.
     Returns None gracefully so the agent still starts without it.
     """
-    phoenix_api_key = os.environ.get("PHOENIX_API_KEY", "").strip()
-    arize_api_key   = os.environ.get("ARIZE_API_KEY", "").strip()
+    # .strip("'\" ") also removes stray surrounding quotes that can leak in
+    # when env vars are set via shell tooling (e.g. gcloud --set-env-vars).
+    phoenix_api_key = os.environ.get("PHOENIX_API_KEY", "").strip().strip("'\"")
+    arize_api_key   = os.environ.get("ARIZE_API_KEY", "").strip().strip("'\"")
 
     # Prefer the Phoenix-cloud npx server when a dedicated Phoenix key exists.
     # Fall back to the local Python MCP server (arize_mcp_server.py) which uses
@@ -76,9 +78,9 @@ def _build_phoenix_mcp() -> McpToolset | None:
                     command=npx_cmd,
                     args=[
                         "-y", "@arizeai/phoenix-mcp@latest",
-                        "--baseUrl", os.environ.get("PHOENIX_BASE_URL", "https://app.phoenix.arize.com"),
+                        "--baseUrl", os.environ.get("PHOENIX_BASE_URL", "https://app.phoenix.arize.com").strip().strip("'\""),
                         "--apiKey", phoenix_api_key,
-                        "--project", os.environ.get("PHOENIX_PROJECT_NAME", "default"),
+                        "--project", os.environ.get("PHOENIX_PROJECT_NAME", "default").strip().strip("'\""),
                     ],
                 ),
                 timeout=30.0,
