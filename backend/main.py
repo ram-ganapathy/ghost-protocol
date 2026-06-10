@@ -22,6 +22,8 @@ from tracing import setup_arize_tracing
 from arize_cockpit import fetch_cockpit_data
 
 logging.basicConfig(level=logging.INFO)
+logging.getLogger("google_adk.google.adk.tools.mcp_tool").setLevel(logging.DEBUG)
+logging.getLogger("google_adk.google.adk.agents.llm_agent").setLevel(logging.DEBUG)
 
 load_dotenv()
 

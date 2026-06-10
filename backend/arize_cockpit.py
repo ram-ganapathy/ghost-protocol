@@ -35,10 +35,11 @@ _SPAN_CAP       = 5_000 # safety upper bound across all pages
 
 # Shape returned when Arize is unreachable or has no scored spans yet.
 _EMPTY_RESPONSE: dict[str, Any] = {
-    "fidelity": None,
-    "handled": 0,
-    "flagged": [],
-    "error": None,
+    "fidelity":      None,
+    "handled":       0,
+    "flagged":       [],
+    "recent_traces": [],
+    "error":         None,
 }
 
 
@@ -269,8 +270,8 @@ def fetch_cockpit_data() -> dict[str, Any]:
     if not llm_spans:
         return _empty("No call_llm spans found — run the agent at least once first")
 
-    # ── Parse each span into a record ────────────────────────────────────
-    records: list[dict[str, Any]] = []
+    # ── Parse every call_llm span — include whether or not it has an eval ─
+    raw_records: list[dict[str, Any]] = []
     for s in llm_spans:
         attrs = s.attributes or {}
 
@@ -287,52 +288,74 @@ def fetch_cockpit_data() -> dict[str, Any]:
         q = _extract_question(attrs.get("gcp.vertex.agent.llm_request"))
         a = _extract_answer(attrs.get("gcp.vertex.agent.llm_response"))
 
-        # Skip spans without both question and answer — tool sub-calls, etc.
         if not q or not a:
-            continue
+            continue  # tool sub-calls / empty spans
 
-        # Look up eval from the AsyncGenerateContent span in the same trace.
-        ev = trace_evals.get(trace_id)
-        if not ev:
-            continue  # trace not scored — skip
-
-        records.append({
+        ev = trace_evals.get(trace_id)  # None if not yet evaluated
+        raw_records.append({
             "trace_id":    trace_id,
-            "span_id":     ev["span_id"] or span_id,
-            "start_time":  ev["start_time"] or s.start_time,
+            "span_id":     (ev["span_id"] if ev else None) or span_id,
+            "start_time":  (ev["start_time"] if ev else None) or s.start_time,
             "q":           q,
             "a":           a,
-            "label":       ev["label"],
-            "explanation": ev["explanation"],
+            "label":       ev["label"] if ev else None,
+            "explanation": ev["explanation"] if ev else None,
         })
 
-    if not records:
-        return _empty("No scored call_llm spans found — run the evaluator in Arize first")
+    if not raw_records:
+        return _empty("No call_llm spans found — run the agent at least once first")
 
-    # ── Deduplicate: one record per trace_id ──────────────────────────────
-    # Within a trace, multiple call_llm spans may exist (multi-turn, tool retry).
-    # Keep the span with the longest answer — it tends to be the final response.
+    # ── Deduplicate: one record per trace_id (keep longest answer) ────────
     seen: dict[str, dict[str, Any]] = {}
-    for r in records:
+    for r in raw_records:
         tid = r["trace_id"]
         if tid not in seen or len(r["a"]) > len(seen[tid]["a"]):
             seen[tid] = r
 
-    deduped = list(seen.values())
-    total   = len(deduped)
+    _epoch = datetime.min.replace(tzinfo=timezone.utc)
+    deduped = sorted(seen.values(), key=lambda r: (r["start_time"] or _epoch), reverse=True)
+
+    # ── Recent traces feed — ALL interactions, newest first ───────────────
+    def _fmt_ts(ts: Any) -> str | None:
+        if ts is None:
+            return None
+        try:
+            return ts.strftime("%H:%M:%S") if hasattr(ts, "strftime") else str(ts)[:19]
+        except Exception:
+            return None
+
+    recent_traces: list[dict[str, Any]] = [
+        {
+            "id":       (r["trace_id"] or r["span_id"])[:16],
+            "question": r["q"][:200],
+            "answer":   r["a"][:300],
+            "label":    r["label"],
+            "ts":       _fmt_ts(r["start_time"]),
+        }
+        for r in deduped[:20]
+    ]
+
+    # ── Scored records — fidelity + flagged queue ──────────────────────────
+    scored  = [r for r in deduped if r["label"] is not None]
+    total   = len(scored)
+
+    if total == 0:
+        return {
+            "fidelity":      None,
+            "handled":       0,
+            "flagged":       [],
+            "domains":       _build_domains(),
+            "recent_traces": recent_traces,
+            "error":         "No evaluated spans yet — run the evaluator in Arize to score traces",
+        }
 
     accepted_labels = {"grounded", "deferred"}
     negative_labels = {"overstepped"}
-    faithful_count  = sum(1 for r in deduped if r["label"] in accepted_labels)
-    fidelity        = round(faithful_count / total, 4) if total > 0 else None
+    faithful_count  = sum(1 for r in scored if r["label"] in accepted_labels)
+    fidelity        = round(faithful_count / total, 4)
 
-    # ── Build flagged list — negative traces only, most recent first ──────
-    non_faithful = [r for r in deduped if r["label"] in negative_labels]
-    _epoch = datetime.min.replace(tzinfo=timezone.utc)
-    non_faithful.sort(
-        key=lambda r: (r["start_time"] or _epoch),
-        reverse=True,
-    )
+    non_faithful = [r for r in scored if r["label"] in negative_labels]
+    non_faithful.sort(key=lambda r: (r["start_time"] or _epoch), reverse=True)
 
     flagged: list[dict[str, Any]] = []
     for i, r in enumerate(non_faithful):
@@ -345,9 +368,10 @@ def fetch_cockpit_data() -> dict[str, Any]:
         })
 
     return {
-        "fidelity": fidelity,
-        "handled":  total,
-        "flagged":  flagged,
-        "domains":  _build_domains(),
-        "error":    None,
+        "fidelity":      fidelity,
+        "handled":       total,
+        "flagged":       flagged,
+        "domains":       _build_domains(),
+        "recent_traces": recent_traces,
+        "error":         None,
     }

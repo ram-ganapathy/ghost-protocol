@@ -19,7 +19,12 @@ ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1
 
 WORKDIR /app
-
+# Install Node.js so the Phoenix MCP server can run as a subprocess via npx
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends nodejs npm \
+    && npm install -g @arizeai/phoenix-mcp@latest \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 # Install Python dependencies before copying source (better layer caching)
 COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt

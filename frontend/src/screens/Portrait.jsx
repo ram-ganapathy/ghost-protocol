@@ -158,34 +158,37 @@ export default function Portrait({ ghostReady }) {
       {/* ── portrait + nameplate ─────────── */}
       <div className="portrait-stage">
 
-        {/* glow ring — visible when speaking or loading */}
-        <div className={`glow-ring${(mode === 'speaking' || mode === 'loading' || mode === 'checking') ? ' glow-ring--active' : ''}`} aria-hidden="true" />
+        {/* frame wrap — glow ring is positioned relative to this, not the whole stage */}
+        <div className="portrait-frame-wrap">
+          {/* glow ring — visible when speaking or loading */}
+          <div className={`glow-ring${(mode === 'speaking' || mode === 'loading' || mode === 'checking') ? ' glow-ring--active' : ''}`} aria-hidden="true" />
 
-        {/* gilt frame */}
-        <div className={frameClass}>
-          <div className="frame-inner">
-            <div className="portrait-img-wrap">
-              <img
-                src={ghost.portraitUrl}
-                alt={`Portrait of ${ghost.name}`}
-                className={`portrait-img${mode === 'deferring' ? ' portrait-img--dim' : ''}`}
-                draggable="false"
-              />
-              {/* breathing overlay — idle only */}
-              {mode === 'idle' && (
-                <div className="portrait-breathe" aria-hidden="true" />
-              )}
+          {/* gilt frame */}
+          <div className={frameClass}>
+            <div className="frame-inner">
+              <div className="portrait-img-wrap">
+                <img
+                  src={ghost.portraitUrl}
+                  alt={`Portrait of ${ghost.name}`}
+                  className={`portrait-img${mode === 'deferring' ? ' portrait-img--dim' : ''}`}
+                  draggable="false"
+                />
+                {/* breathing overlay — idle only */}
+                {mode === 'idle' && (
+                  <div className="portrait-breathe" aria-hidden="true" />
+                )}
+              </div>
             </div>
-          </div>
 
-          {/* frame corner ornaments */}
-          <span className="frame-corner frame-corner--tl" aria-hidden="true" />
-          <span className="frame-corner frame-corner--tr" aria-hidden="true" />
-          <span className="frame-corner frame-corner--bl" aria-hidden="true" />
-          <span className="frame-corner frame-corner--br" aria-hidden="true" />
+            {/* frame corner ornaments */}
+            <span className="frame-corner frame-corner--tl" aria-hidden="true" />
+            <span className="frame-corner frame-corner--tr" aria-hidden="true" />
+            <span className="frame-corner frame-corner--bl" aria-hidden="true" />
+            <span className="frame-corner frame-corner--br" aria-hidden="true" />
+          </div>
         </div>
 
-        {/* nameplate */}
+        {/* nameplate — beside the portrait */}
         <div className="nameplate">
           <div className="nameplate__name">{ghost.name}</div>
           <div className="nameplate__divider" aria-hidden="true" />
@@ -242,6 +245,8 @@ export default function Portrait({ ghostReady }) {
               <p className="speech-checking">
                 {toolUsed === 'calendar'
                   ? 'Daniel is checking his calendar…'
+                  : toolUsed === 'phoenix'
+                  ? 'Recalling past corrections…'
                   : 'Daniel is looking something up…'}
               </p>
             </div>

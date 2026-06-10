@@ -1,10 +1,12 @@
 fastapi
 uvicorn[standard]
 slowapi
+mcp
 google-genai
 google-adk
 python-dotenv
 arize-otel
+arize-phoenix
 openinference-instrumentation-google-genai
 arize>=7.0.3
 pandas

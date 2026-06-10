@@ -74,6 +74,64 @@
   margin-top: 0.25rem;
 }
 
+/* ── Tab nav ─────────────────────────────────── */
+.cockpit-tab-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  border-bottom: 1px solid rgba(154,102,16,0.25);
+  padding-bottom: 0;
+  margin-bottom: calc(-1 * var(--gap-xl) + var(--gap-md));
+}
+
+.tab-btn {
+  padding: 0.45rem 1.1rem;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  border: 1px solid transparent;
+  border-bottom: none;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s;
+  position: relative;
+  bottom: -1px;
+}
+
+.tab-btn:hover {
+  color: var(--text-dim);
+  background: rgba(154,102,16,0.08);
+}
+
+.tab-btn--active {
+  color: var(--frame-light);
+  background: var(--bg-panel);
+  border-color: rgba(154,102,16,0.25);
+  border-bottom-color: var(--bg-panel);
+}
+
+.tab-btn--refresh {
+  margin-left: auto;
+  border-radius: var(--radius-sm);
+  bottom: 0;
+  border: 1px solid rgba(154,102,16,0.3);
+  color: var(--text-dim);
+  padding: 0.35rem 0.85rem;
+}
+
+.tab-btn--refresh:hover:not(:disabled) {
+  background: rgba(154,102,16,0.12);
+  color: var(--frame-light);
+}
+
+.tab-btn--refresh:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 /* ── Body ────────────────────────────────────── */
 .cockpit-body {
   display: grid;
@@ -724,4 +782,135 @@
 .teach-done__icon {
   font-size: 1.5rem;
   flex-shrink: 0;
+}
+
+/* ── Traces panel ────────────────────────────── */
+.traces-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-md);
+  max-width: 900px;
+}
+
+.traces-desc {
+  margin-top: 0;
+}
+
+.traces-note {
+  margin-bottom: 0;
+}
+
+.traces-empty {
+  padding: var(--gap-xl);
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  font-style: italic;
+  text-align: center;
+  border: 1px dashed rgba(154,102,16,0.2);
+  border-radius: var(--radius);
+}
+
+.traces-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.trace-row {
+  background: var(--bg-panel);
+  border: 1px solid rgba(154,102,16,0.18);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  transition: border-color 0.2s;
+}
+
+.trace-row:hover {
+  border-color: rgba(154,102,16,0.35);
+}
+
+.trace-row__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-md);
+  flex-wrap: wrap;
+}
+
+.trace-ts {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+  min-width: 64px;
+}
+
+.trace-id {
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  margin-left: auto;
+  opacity: 0.6;
+}
+
+.trace-question {
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  color: var(--text);
+  font-style: italic;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.trace-answer {
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  line-height: 1.55;
+  margin: 0;
+  padding-left: 0.75rem;
+  border-left: 2px solid rgba(154,102,16,0.25);
+}
+
+/* ── Eval badge ──────────────────────────────── */
+.eval-badge {
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid;
+  white-space: nowrap;
+}
+
+.eval-badge--grounded {
+  color: var(--accent-fidelity);
+  border-color: var(--accent-fidelity);
+  background: rgba(93,202,165,0.1);
+}
+
+.eval-badge--deferred {
+  color: #7eb8e0;
+  border-color: #7eb8e0;
+  background: rgba(126,184,224,0.1);
+}
+
+.eval-badge--overstepped {
+  color: var(--gap);
+  border-color: var(--gap);
+  background: rgba(199,89,63,0.1);
+}
+
+.eval-badge--pending {
+  color: var(--text-muted);
+  border-color: rgba(154,102,16,0.3);
+  background: rgba(154,102,16,0.06);
+  font-weight: 500;
 }

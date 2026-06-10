@@ -52,6 +52,21 @@ def setup_arize_tracing() -> bool:
             project_name="ghost-protocol",
         )
 
+        # Also export to Phoenix cloud so list-traces MCP tool has live data.
+        phoenix_base_url = os.environ.get("PHOENIX_BASE_URL", "").strip()
+        phoenix_api_key  = os.environ.get("PHOENIX_API_KEY", "").strip()
+        if phoenix_base_url and phoenix_api_key:
+            try:
+                from phoenix.otel import register as phoenix_register
+                phoenix_register(
+                    project_name="default",
+                    endpoint=phoenix_base_url.rstrip("/") + "/v1/traces",
+                    headers={"api_key": phoenix_api_key},
+                )
+                _log.info("Arize tracing: also exporting to Phoenix — %s", phoenix_base_url)
+            except Exception as phoenix_exc:
+                _log.warning("Arize tracing: Phoenix export setup failed (%s) — continuing", phoenix_exc)
+
         # Auto-instruments every google-genai call (which ADK uses internally).
         GoogleGenAIInstrumentor().instrument(tracer_provider=tracer_provider)
 

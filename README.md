@@ -18,37 +18,43 @@ Ghost Protocol reconstructs a team member's expertise into an AI agent that can 
 
 **Converse with trust** — The ghost doesn't treat everyone the same. A stranger asking about the billing connector gets nudged with clarifying questions. A trusted teammate gets the real take, the scar from 2011, the direct recommendation. Trust tiers shape response depth, just like the real person would.
 
-**Monitor with Arize** — Every response flows through Arize Phoenix. A custom boundary-adherence eval scores each answer as `grounded` (stayed within expertise), `deferred` (correctly said "not my call"), or `overstepped` (answered beyond its knowledge). The cockpit surfaces a live fidelity score and flags overstepped responses.
+**Monitor with Arize** — Every response is traced to Arize AX. A custom boundary-adherence eval scores each answer as `grounded` (stayed within expertise), `deferred` (correctly said "not my call"), or `overstepped` (answered beyond its knowledge). The cockpit surfaces a live fidelity score and flags overstepped responses.
+
+**Live persona control via MCP** — The ghost calls the Phoenix MCP server at the start of every turn to fetch the latest `daniel-persona` prompt. Update the prompt in Phoenix and the ghost's tone shifts immediately — no restart, no redeploy.
 
 **Teach and recover** — When the ghost oversteps, the human steps in. Click teach, provide the correction, and the ghost improves in-session. Ask the same question again — it now defers correctly. The fidelity score ticks back up. The loop closes.
 
 ## Architecture
 
 ```
-┌─────────────┐     ┌──────────────────┐     ┌─────────────┐
-│   React UI  │────▶│  FastAPI Backend  │────▶│  Gemini via  │
-│  (Dossier,  │◀────│  (Trust engine,   │◀────│  Vertex AI   │
-│  Portrait,  │     │   Fragment store, │     └─────────────┘
-│  Cockpit)   │     │   Teach loop)     │
+┌─────────────┐     ┌──────────────────┐     ┌──────────────┐
+│   React UI  │────▶│  FastAPI Backend  │────▶│  Gemini 2.5  │
+│  (Dossier,  │◀────│  (Google ADK,     │◀────│  Flash via   │
+│  Portrait,  │     │   Trust engine,   │     │  Vertex AI   │
+│  Cockpit)   │     │   Fragment store) │     └──────────────┘
 └─────────────┘     └───────┬──────────┘
                             │
-                            ▼
-                    ┌──────────────────┐
-                    │   Arize Phoenix   │
-                    │  (Traces, custom  │
-                    │   boundary eval,  │
-                    │   fidelity score) │
-                    └──────────────────┘
+               ┌────────────┴─────────────┐
+               ▼                          ▼
+    ┌──────────────────┐       ┌──────────────────┐
+    │    Arize AX       │       │   Arize Phoenix   │
+    │  (OTLP traces,   │       │  (MCP tool —      │
+    │   boundary-      │       │   live persona    │
+    │   adherence eval,│       │   prompt per turn)│
+    │   cockpit REST)  │       └──────────────────┘
+    └──────────────────┘
 ```
 
 ## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
-| LLM | Gemini 2.0 Flash via Vertex AI |
+| LLM | Gemini 2.5 Flash via Vertex AI |
+| Agent framework | Google ADK (Agent Development Kit) |
 | Backend | Python, FastAPI |
 | Frontend | React, Vite |
-| Observability | Arize Phoenix (traces + custom evals) |
+| Tracing & evals | Arize AX (OTLP + boundary-adherence evaluator) |
+| Live prompt management | Arize Phoenix (MCP tool — `@arizeai/phoenix-mcp`) |
 | Deployment | Google Cloud Run |
 | Auth | Google ADC (Application Default Credentials) |
 
@@ -76,10 +82,19 @@ uvicorn main:app --reload
 
 Create a `.env` file in `backend/` with:
 ```
-ARIZE_API_KEY=your_key
-ARIZE_SPACE_ID=your_space_id
+# Google / Vertex AI
 GOOGLE_CLOUD_PROJECT=your_project_id
-GOOGLE_CLOUD_LOCATION=your_location
+GOOGLE_CLOUD_LOCATION=us-central1
+
+# Arize AX (tracing + evals + cockpit REST)
+ARIZE_API_KEY=your_arize_api_key
+ARIZE_SPACE_ID=your_arize_space_id
+ARIZE_PROJECT_NAME=ghost-protocol
+
+# Arize Phoenix (live prompt MCP)
+PHOENIX_BASE_URL=https://app.phoenix.arize.com/s/your-username
+PHOENIX_API_KEY=your_phoenix_api_key
+PHOENIX_PROJECT_NAME=default
 ```
 
 Gemini authentication uses Google ADC. Run `gcloud auth application-default login` locally.

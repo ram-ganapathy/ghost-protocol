@@ -140,11 +140,20 @@
 
 /* ── Portrait stage ─────────────────────────── */
 .portrait-stage {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2rem;
+  padding-top: 1.5rem;
+}
+
+/* ── Frame wrap — glow ring positions relative to this ── */
+.portrait-frame-wrap {
   position: relative;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: var(--gap-md);
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 /* ── Glow ring ───────────────────────────────── */
@@ -152,9 +161,9 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 340px;
-  height: 420px;
-  transform: translate(-50%, -52%);
+  width: 260px;
+  height: 320px;
+  transform: translate(-50%, -50%);
   border-radius: 50% 50% 46% 46% / 55% 55% 45% 45%;
   border: 2px solid transparent;
   pointer-events: none;
@@ -214,8 +223,8 @@
 /* ── Portrait image ─────────────────────────── */
 .portrait-img-wrap {
   position: relative;
-  width: 280px;
-  height: 340px;
+  width: 200px;
+  height: 250px;
   overflow: hidden;
 }
 
@@ -269,12 +278,12 @@
 .nameplate {
   background: linear-gradient(135deg, #2e2720 0%, #1e1a15 50%, #2a2218 100%);
   border: 1px solid var(--frame);
-  border-top: 2px solid var(--frame-light);
+  border-left: 2px solid var(--frame-light);
   border-radius: var(--radius-sm);
-  padding: 0.75rem 2rem 0.85rem;
-  text-align: center;
+  padding: 1rem 1.5rem 1.1rem;
+  text-align: left;
   box-shadow: 0 4px 16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(239,159,39,0.15);
-  min-width: 280px;
+  min-width: 200px;
 }
 
 .nameplate__name {
@@ -289,8 +298,8 @@
 .nameplate__divider {
   width: 60%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--frame), transparent);
-  margin: 0.4rem auto;
+  background: linear-gradient(90deg, var(--frame), transparent);
+  margin: 0.4rem 0;
 }
 
 .nameplate__title {
@@ -307,7 +316,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  margin-top: 0.6rem;
+  margin-top: 0.65rem;
   padding: 0.2rem 0.7rem;
   border-radius: 999px;
   font-family: var(--font-sans);
@@ -366,11 +375,12 @@
   background: rgba(154, 102, 16, 0.15);
   border: 1px solid rgba(154, 102, 16, 0.4);
   border-radius: var(--radius) var(--radius-sm) var(--radius) var(--radius);
-  padding: 0.45rem 0.9rem;
+  padding: 0.5rem 1rem;
   font-family: var(--font-sans);
-  font-size: 0.85rem;
-  color: var(--text-dim);
+  font-size: 0.88rem;
+  color: var(--text);
   max-width: 88%;
+  line-height: 1.5;
 }
 
 /* ── Ghost speech bubble (left-aligned, tail at top-left) ── */
@@ -438,9 +448,13 @@
 
 .speech-answer {
   font-family: var(--font-serif);
-  font-size: 1.25rem;
+  font-size: 1.05rem;
+  font-weight: 400;
   color: var(--text);
-  line-height: 1.7;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: 0.015em;
 }
 
 .speech-bubble--loading {
@@ -545,9 +559,12 @@
 
 .speech-defer-body {
   font-family: var(--font-serif);
-  font-size: 1.15rem;
+  font-size: 1.0rem;
   font-style: italic;
   color: var(--text-dim);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* ── Input bar ─────────────────────────────── */
